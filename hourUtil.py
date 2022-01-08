@@ -1,7 +1,8 @@
 import csv
 import argparse
 separator = '\t'
-
+from timeit import default_timer as timer
+s = timer()
 #/\/\/\/\/\/\ Nom de la métrique: Ecart de l'heure /\/\/\/\/\/\
 #Le but de cette métrique est de calculer l'écart d'heure pour chaque ligne du fichier anonymisé
 #Ainsi, on sâ€™assure de lâ€™authenticité à  la laquelle la position GPS a été relevée.
@@ -23,16 +24,16 @@ def main(nona, anon, parameters={}): #Compute the utility in function of the dat
     nona_reader = csv.reader(fd_nona_file, delimiter=separator)
     anon_reader = csv.reader(fd_anon_file, delimiter=separator)
     for row1, row2 in zip(nona_reader, anon_reader):
+        filesize += 1  #Erreur position
         if row2[0]=="DEL":
             continue
         score = 1
-        filesize += 1
         if len(row2[1]) > 13 and len(row2[0]):
             houranon = int(row2[1][11:13])
             hournona = int(row1[1][11:13])
             if 0 <= houranon < 24 and 0 <= hournona < 24:
                 if abs(houranon - hournona):  # Subtract 0,1 points per hour (even if days are identical)
-                    score -= hourdec[abs(houranon) - int(hournona)]  # Subtract the amount linked to the hour gap
+                    score = hourdec[abs(houranon - hournona)]  # Subtract the amount linked to the hour gap #Erreur
             else: return (-1, filesize)
         else: return (-1, filesize)
         total += max(0, score) if row2[0] != "DEL" else 0
@@ -45,3 +46,5 @@ if __name__ == "__main__":
     parser.add_argument("original", help="Original Dataframe filename")
     args = parser.parse_args()
     print(main(args.original, args.anonymized))
+e = timer()
+print(e - s)

@@ -20,10 +20,10 @@ def main(nona, anon, parameters={}): #Compute the utility in function of the dat
     nona_reader = csv.reader(fd_nona_file, delimiter=separator)
     anon_reader = csv.reader(fd_anon_file, delimiter=separator)
     for row1, row2 in zip(nona_reader, anon_reader):
+        filesize += 1    # Erreur position
         if row2[0]=="DEL":
             continue
         score = 1
-        filesize += 1
         if len(row2[1]) > 10 and len(row2[0]):
             year_na, month_na, day_na = row1[1][0:10].split("-")
             year_an, month_an, day_an = row2[1][0:10].split("-")
