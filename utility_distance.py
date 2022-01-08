@@ -45,7 +45,7 @@ def main(fd_anon_file, fd_nona_file, parameters={"dx":0.1}):
     anon_reader = csv.reader(fd_anon_file, delimiter=separator)
 
     #read the files and calcul
-    for lineAno, lineNonAno in zip(nona_reader, anon_reader):
+    for lineAno, lineNonAno in zip(anon_reader, nona_reader):  #Erreur
         filesize += 1
         if lineAno[0] != "DEL":
             diff_lat = abs(float(lineNonAno[3])-float(lineAno[3]))
